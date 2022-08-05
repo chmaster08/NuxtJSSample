@@ -1,10 +1,25 @@
 <template>
+<div>
   <img
     class="vuetify-logo"
     alt="Vuetify Logo"
     src="/vuetify-logo.svg"
   >
+  <h2>{{msg}}</h2>
+
+</div>
 </template>
+
+<script>
+export default{
+  props:{
+    msg : {
+      type:String,
+      default : 'Hello Real World',
+    }
+  },
+}
+</script>
 
 <style>
 .vuetify-logo {
