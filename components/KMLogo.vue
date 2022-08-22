@@ -4,8 +4,8 @@
 
 <style>
 .km-logo{
-    height: 50%;
-    width: 30%;
+    max-width: 300px;
+    height: auto;
     transform: rotateY(720deg);
     animation: turn 5s ease-out forwards 1s;
 }
