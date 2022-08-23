@@ -13,7 +13,7 @@
 
 <script>
 export default ({
-    data() {
+    data:() => {
         return {
             count : 3,
             intervalID : undefined,

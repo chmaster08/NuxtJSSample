@@ -14,7 +14,7 @@
 <script>
 export default {
   name: 'DefaultLayout',
-  data () {
+  data:()=> {
     return {
       clipped: false,
       drawer: false,

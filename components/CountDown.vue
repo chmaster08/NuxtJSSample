@@ -29,8 +29,10 @@ export default{
         }
     },
 
-    data:{
-        fontColor : "black",
+    data:()=>{
+        return{
+            fontColor: "black",
+        };
     },
 
     computed:{

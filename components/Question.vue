@@ -40,10 +40,6 @@
 <script>
 import CountDown from './CountDown.vue';
 export default{
-
-    data:{
-
-    },
     props: {
         Q_Num: {
             type: Number,

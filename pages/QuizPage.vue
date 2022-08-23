@@ -72,7 +72,7 @@ import Question from '../components/Question.vue';
 import PoseDisplayer from '../components/PoseDisplayer.vue';
 import Selection from '../components/Selection.vue';
 export default{
-    data()
+    data:()=>
     {
         return {
             select1 : "Yes",

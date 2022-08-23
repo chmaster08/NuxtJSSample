@@ -35,3 +35,18 @@ h1{
     height:200px;
 }
 </style>
+
+<script>
+
+export default({
+    methods :{
+        startConfetti(){
+            this.$confetti.start();
+        },
+        stopConfetti()
+        {
+            this.$confetti.stop();
+        }
+    },
+})
+</script>

@@ -31,8 +31,5 @@ import PoseDisplayer from "../components/PoseDisplayer.vue";
 export default {
     name: "IndexPage",
     components: { KMLogo, PoseDisplayer },
-    data :{
-      overlay : false,
-    }
 }
 </script>
