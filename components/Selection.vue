@@ -1,7 +1,7 @@
 <template>
-    <v-container fill-height>
+    <v-container fill-height align-content="center">
         <v-row align-content="center" justify="center" class="align-center">
-            <v-col>
+            <v-col align-content="center" justify="center">
                 <img :src="imgSrc"  class="pose-img"/>
             </v-col>
             <v-col>
@@ -13,8 +13,9 @@
 
 <style>
 .pose-img{
-    height: auto;
-    max-width: 300px;
+    height: 350px;
+    max-width: 350px;
+    align-items: center;
 }
 
 .select-content

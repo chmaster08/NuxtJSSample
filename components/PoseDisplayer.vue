@@ -1,10 +1,18 @@
 <template>
-    <img src="/yoga_pose_0.png" class="pose_picture"/>
+    <img :src="this.imgSrc" class="pose_picture" />
 </template>
 
 <style>
 .pose_picture{
-    height: auto;
-    max-width: 300px;
+    height: 500px;
+    max-width: 400px;
 }
 </style>
+
+<script>
+export default{
+    props:{
+        imgSrc : undefined
+    }
+}
+</script>
