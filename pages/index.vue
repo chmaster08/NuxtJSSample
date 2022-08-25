@@ -13,7 +13,7 @@
       <PoseDisplayer :imgSrc="this.imgPath" />
     </v-row>
     <v-row justify="center" align-content="center">
-      <v-btn color="primary" @click="this.Transit">Start for Debug</v-btn>
+      <v-btn color="primary" @click="this.TransitionToGame">Start for Debug</v-btn>
     </v-row>
   </v-container>
 </template>
@@ -28,6 +28,7 @@
 <script>
 import KMLogo from "../components/KMLogo.vue";
 import PoseDisplayer from "../components/PoseDisplayer.vue";
+import { mapMutations } from 'vuex'
 export default {
     name: "IndexPage",
     components: { KMLogo, PoseDisplayer },
@@ -43,6 +44,44 @@ export default {
 
     },
     methods:{
+
+      //Quizを取得する
+      LoadQuizData: function () {
+        this.$axios.get(this.$config.questionURL, {
+          headers: {
+            "content-type": "application/x-www-form-urlencoded",
+          },
+        })
+        .then((response) => {
+          response.data.forEach(el => {
+            this.$store.commit('question/addQ', el["quiz"]);
+            this.$store.commit('question/addAns', el["ans"]);
+          });
+          console.log("Get QuizData Successfully");
+        })
+        .catch((error) => {
+          console.log(error);
+          if (error.response) {
+            this.error_message =
+              error.response.data.body.error_type +
+              ": " +
+              error.response.data.body.error_message;
+            console.log(error.response.data);
+            console.log(error.response.status);
+            console.log(error.response.statusText);
+            console.log(error.response.headers);
+          } else if (error.request) {
+            this.error_message = "Error: no response from server";
+            console.log(error.request);
+          } else {
+            this.error_message = "Error: something went wrong";
+            console.log("Error", error.message);
+          }
+          this.LoadDummyQuestion();
+        });
+      },
+
+      //画像を取得する
       polling : function (){
         this.$axios.get(this.$config.apiURL, {
           headers: {
@@ -82,7 +121,26 @@ export default {
           }
         });
       },
-      Transit()
+
+      //問題取得に失敗した場合 or Debug用のローカルダミー問題
+      LoadDummyQuestion()
+      {
+        for (var  i = 0; i < 10 ; i++)
+        {
+          var leftNum = Math.floor( Math.random() * 1000);
+          var rightNum = Math.floor(Math.random() * 1000);
+          var ansNum = i % 2 == 0 ? leftNum+rightNum : (leftNum + rightNum) -Math.floor(Math.random() * 10);
+          var ans = i %2 == 0 ? "1" : "2"; 
+          var q_txt = leftNum + " + " + rightNum+" = "+ ansNum + " ? ";
+          this.$store.commit('question/addQ',q_txt);
+          this.$store.commit('question/addAns',ans);
+          console.log(this.$store.getters['question/getQ_data'](i));
+          console.log(this.$store.getters['question/getAns_data'](i));
+        }
+
+
+      },
+      TransitionToGame:function()
       {
         clearInterval(this.timer);
         this.$router.push("/ready");
@@ -93,6 +151,7 @@ export default {
     mounted:function()
     {
       const self = this;
+      self.LoadQuizData();
       self.timer =setInterval(()=>self.polling(),500);
     },
 

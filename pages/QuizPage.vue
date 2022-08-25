@@ -26,18 +26,21 @@
             </v-col>
         </v-row>
         <v-row>
-                <v-btn color="secondary" v-on:click="onClickForDebug">
-                    Next for Debug
+                <v-btn color="secondary" v-on:click="UpdateQuiz">
+                    Next for Debug(Not Selected)
                 </v-btn>
-                <v-btn color="warning" @click="onDetectFirstPose">
+                <v-btn color="warning" @click="onDetectLeftPose">
                     first pose detect for debug
                 </v-btn>
-                <v-btn color="warning" @click="onDetectSecondPose">
+                <v-btn color="warning" @click="onDetectRightPose">
                     second pose detect for debug
                 </v-btn>
                 <v-btn color="success" nuxt to="/">
                     Back to Top For Debug
                 </v-btn>
+        </v-row>
+        <v-row>
+            <img :src="this.streamURL"/>
         </v-row>
     </v-container>
 </template>
@@ -83,63 +86,73 @@ export default{
             leftColorState : "blue-grey lighten-4",
             rightColorState : "blue-grey lighten-4",
             currentQNum : 1,
-            currentQuiz : "これは最初のクイズですか？",
+            totalQCount : 10,
+            currentQuiz : "Nodata",
             counterID : undefined,
             counter : 10,
             reload : true,
-            q_state : ["NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE"],
+            q_state : [],
             imgPath: "/yoga_pose_default.png",
+            streamURL:"",
             error_message: "",
             recognition: "skeleton",
-            before_recognition: "skeleton",
             timer: undefined,
         };
 
     },
 
-    created() {
-        this.counterID = setInterval(() => this.CountDown(), 1000);
-    },
-
     methods:{
 
-        onClickForDebug()
+        UpdateQuiz()
         {
 
-            if (this.currentQNum == 10)
+            if (this.currentQNum == this.totalQCount)
             {
                 clearInterval(this.timer);
                 let passNumer = this.q_state.filter(value => value == "OK").length;
                 this.$router.push({name:"Result",params:{pass:passNumer}});
+                return;
             }
 
             this.currentQNum = this.currentQNum+1;
-            this.currentQuiz = "これは"+ this.currentQNum + "番目のクイズですか？";
-            if (this.currentQNum % 2 == 0)
+            this.currentQuiz = this.$store.getters['question/getQ_data'](this.currentQNum-1);
+            this.counterID = setInterval(()=>this.CountDown(),1000);
+        },
+        onDetectLeftPose()
+        {
+            var ans = this.$store.getters['question/getAns_data'](this.currentQNum-1);
+            if (ans == "1")
             {
-                this.leftAns = "Yes";
-                this.rightAns = "No";
+                this.q_state[this.currentQNum-1] = "OK";
+                this.q_state.splice();
+                this.leftColorState = "green lighten-2";
             }
             else
             {
-                this.leftAns = "No";
-                this.rightAns = "Yes";
+                this.q_state[this.currentQNum - 1] = "NG";
+                this.q_state.splice();
+                this.leftColorState = "red lighten-2";
+
             }
-            this.counterID = setInterval(()=>this.CountDown(),1000);
-        },
-        onDetectFirstPose()
-        {
-            this.q_state[this.currentQNum-1]="OK";
-            this.q_state.splice();
-            this.leftColorState = "green lighten-2";
             this.reset();
 
         },
-        onDetectSecondPose()
+        onDetectRightPose()
         {
-            this.q_state[this.currentQNum-1]="NG";
-            this.q_state.splice();
-            this.rightColorState = "red lighten-2";
+            var ans = this.$store.getters['question/getAns_data'](this.currentQNum-1);
+            if (ans == "2")
+            {
+                this.q_state[this.currentQNum-1] = "OK";
+                this.q_state.splice();
+                this.rightColorState = "green lighten-2";
+            }
+            else
+            {
+                this.q_state[this.currentQNum - 1] = "NG";
+                this.q_state.splice();
+                this.rightColorState = "red lighten-2";
+
+            }
             this.reset();
 
         },
@@ -148,6 +161,8 @@ export default{
             this.counter = this.counter - 1;
             if (this.counter == 0)
             {
+                this.leftColorState = "red lighten-2";
+                this.rightColorState = "red lighten-2";
                 this.q_state[this.currentQNum - 1] = "NG";
                 this.q_state.splice();
                 this.reset();
@@ -160,7 +175,7 @@ export default{
             this.counter = 10;
             this.leftColorState = "blue-grey lighten-4";
             this.rightColorState = "blue-grey lighten-4";
-            this.onClickForDebug();
+            this.UpdateQuiz();
         },
         getImg: function () {
             this.$axios.get(this.$config.apiURL, {
@@ -198,6 +213,44 @@ export default{
                 });
         },
 
+        getStreaming :function()
+        {
+            this.$axios.get(this.$config.streamURL, {
+                headers: {
+                    "content-type": "application/x-www-form-urlencoded",
+                },
+            })
+                .then((response) => {
+                    this.streamURL = `${response.data.body}`;
+                })
+                .catch((error) => {
+                    if (error.response) {
+                        if (error.response.data.body) {
+                            this.imgPath = `data:image/jpeg;base64,${error.response.data.body}`;
+                        } else {
+                            this.imgPath = "yoga_pose_default.png";
+                        }
+                        this.error_message =
+                            error.response.data.body.error_type +
+                            ": " +
+                            error.response.data.body.error_message;
+                        console.log(error.response.data);
+                        console.log(error.response.status);
+                        console.log(error.response.statusText);
+                        console.log(error.response.headers);
+                    } else if (error.request) {
+                        this.imgPath = "yoga_pose_default.png";
+                        this.error_message = "Error: no response from server";
+                        console.log(error.request);
+                    } else {
+                        this.imgPath = "yoga_pose_default.png";
+                        this.error_message = "Error: something went wrong";
+                        console.log("Error", error.message);
+                    }
+                });
+
+        },
+
         sleepByPromise: function (sec) {
 
             return new Promise(resolve => setTimeout(resolve, sec * 1000));
@@ -210,7 +263,21 @@ export default{
     mounted:function()
     {
       const self = this;
+      self.currentQuiz = this.$store.getters['question/getQ_data'](0);
       self.timer =setInterval(()=>self.getImg(),500);
+        self.counterID = setInterval(() => self.CountDown(), 1000);
+    },
+
+    created() {
+      const self = this;
+      self.totalQCount = this.$store.getters["question/getQCount"];
+      for (var i = 0; i < self.totalQCount ; i++)
+      {
+        self.q_state.push("NONE");
+      }
+      console.log(self.q_state);
+      self.q_state.splice();
+        
     },
 
     computed:{

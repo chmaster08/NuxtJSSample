@@ -21,7 +21,8 @@ export default {
 
   publicRuntimeConfig:{
     apiURL : process.env.API_URL,
-
+    streamURL : process.env.STREAM_URL,
+    questionURL : process.env.QUESTION_URL,
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
