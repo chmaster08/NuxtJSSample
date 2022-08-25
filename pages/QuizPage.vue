@@ -8,10 +8,11 @@
                 <Question :Q_Num="this.currentQNum" :Q_Content="this.currentQuiz" :Q_CountDown="this.counter"/>
             </v-card>
         </v-row>
-        <v-row justify="space-between" align-content="center" class="selection-row">
+        <v-row justify="space-around" align-content="center" class="selection-row">
             <v-col>
                 <v-card class="selection-tile" :color="this.leftColorState">
-                    <Selection v-bind:answer="this.leftAns" :PoseNum="this.getPoseNumforLeft"/>
+                    <Selection v-bind:answer="this.leftAns" :PoseNum="this.getPoseNumforLeft" 
+                    />
                 </v-card>
             </v-col>
             <v-col>
@@ -21,13 +22,26 @@
             </v-col>
             <v-col>
                 <v-card class="selection-tile" :color="this.rightColorState">
-                    <Selection v-bind:answer="this.rightAns" v-bind:PoseNum="this.getPoseNumforRight"/>
+                    <Selection v-bind:answer="this.rightAns" v-bind:PoseNum="this.getPoseNumforRight"
+                     />
                 </v-card>
             </v-col>
         </v-row>
         <v-row>
                 <v-btn color="secondary" v-on:click="UpdateQuiz">
                     Next for Debug(Not Selected)
+                </v-btn>
+                <v-btn color="secondary" @click="onDetectPose1">
+                    Pose0
+                </v-btn>
+                <v-btn color="secondary" @click="onDetectPose1">
+                    Pose1
+                </v-btn>
+                <v-btn color="secondary" @click="onDetectPose2">
+                    Pose2
+                </v-btn>
+                <v-btn color="secondary" @click="onDetectPose3">
+                    Pose3
                 </v-btn>
                 <v-btn color="warning" @click="onDetectLeftPose">
                     first pose detect for debug
@@ -49,7 +63,7 @@
 .question-tile
 {
     width: 100%;
-    height: 200px;
+    height: 250px;
     padding: 20px;
 }
 
@@ -57,6 +71,7 @@
 {
     width: 400px;
     height: 500px;
+    margin-left: 50px;
 
 }
 .selection-tile
@@ -68,7 +83,7 @@
 }
 .selection-row
 {
-    padding: 20px;
+    padding-top: 20px;
 }
 </style>
 <script>
@@ -85,11 +100,14 @@ export default{
             rightAns : "No",
             leftColorState : "blue-grey lighten-4",
             rightColorState : "blue-grey lighten-4",
+            leftPoseNum :-1,
+            rightPoseNum : -1,
             currentQNum : 1,
             totalQCount : 10,
             currentQuiz : "Nodata",
             counterID : undefined,
             counter : 10,
+            detectedPose : -1,
             reload : true,
             q_state : [],
             imgPath: "/yoga_pose_default.png",
@@ -97,6 +115,7 @@ export default{
             error_message: "",
             recognition: "skeleton",
             timer: undefined,
+            PoseNameList :["戦士のポーズⅡ","ダウンドッグ","三日月のポーズ","戦士のポーズⅢ"],
         };
 
     },
@@ -177,7 +196,7 @@ export default{
             this.rightColorState = "blue-grey lighten-4";
             this.UpdateQuiz();
         },
-        getImg: function () {
+        pooling: function () {
             this.$axios.get(this.$config.apiURL, {
                 headers: {
                     "content-type": "application/x-www-form-urlencoded",
@@ -185,6 +204,7 @@ export default{
             })
                 .then((response) => {
                     this.imgPath = `data:image/jpeg;base64,${response.data.body.imagedata}`;
+
                 })
                 .catch((error) => {
                     if (error.response) {
@@ -251,6 +271,23 @@ export default{
 
         },
 
+        onDetectPose0 : function()
+        {
+            this.detectedPose = 0;
+        },
+        onDetectPose1 : function()
+        {
+            this.detectedPose = 1;
+        },
+        onDetectPose2 : function()
+        {
+            this.detectedPose = 2;
+        },
+        onDetectPose3 : function()
+        {
+            this.detectedPose = 3;
+        },
+
         sleepByPromise: function (sec) {
 
             return new Promise(resolve => setTimeout(resolve, sec * 1000));
@@ -264,7 +301,7 @@ export default{
     {
       const self = this;
       self.currentQuiz = this.$store.getters['question/getQ_data'](0);
-      self.timer =setInterval(()=>self.getImg(),500);
+      self.timer =setInterval(()=>self.pooling(),500);
         self.counterID = setInterval(() => self.CountDown(), 1000);
     },
 
@@ -283,11 +320,43 @@ export default{
     computed:{
         getPoseNumforLeft()
         {
+            this.leftPoseNum = this.currentQNum % 4;
             return this.currentQNum % 4;
         },
         getPoseNumforRight()
         {
+            this.rightPoseNum = (this.currentQNum + 2) % 4;
             return (this.currentQNum + 2) % 4;
+        },
+        getPoseNameLeft()
+        {
+            console.log("leftName"+this.PoseNameList[this.leftPoseNum]);
+            console.log("leftNum"+this.leftPoseNum);
+            return this.PoseNameList[this.leftPoseNum];
+        },
+        getPoseNameRight()
+        {
+            return this.PoseNameList[this.rightPoseNum];
+        }
+
+    },
+    watch:{
+        detectedPose : function(oldv,newv)
+        {
+            console.log("newValue:"+newv);
+            if (newv == -1)
+            {
+                return;
+            }
+            if (newv == this.leftPoseNum)
+            {
+                this.onDetectLeftPose();
+            }
+            else if (newv == this.rightPoseNum)
+            {
+                this.onDetectRightPose();
+            }
+
         }
     }
 }

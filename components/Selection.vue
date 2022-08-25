@@ -1,8 +1,13 @@
 <template>
     <v-container fill-height align-content="center">
         <v-row align-content="center" justify="center" class="align-center">
-            <v-col align-content="center" justify="center">
-                <img :src="imgSrc"  class="pose-img"/>
+            <v-col class="ml-5 mr-15">
+                <v-row justify="center">
+                    <p class="pose_name">{{PoseName}}</p>
+                </v-row>
+                <v-row>
+                    <img :src="imgSrc" class="pose-img" />
+                </v-row>
             </v-col>
             <v-col>
                 <p class="select-content">{{answer}}</p>
@@ -16,6 +21,12 @@
     height: 350px;
     max-width: 350px;
     align-items: center;
+}
+
+.pose_name
+{
+    font-size: 30px;
+    font-weight: bold;
 }
 
 .select-content
@@ -35,6 +46,10 @@
             PoseNum:{
                 type : Number,
                 default : 0
+            },
+            PoseName :{
+                type: String,
+                default : "やばいポーズ",
             }
         },
         computed :{

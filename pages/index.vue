@@ -79,6 +79,7 @@ export default {
           }
           this.LoadDummyQuestion();
         });
+
       },
 
       //画像を取得する
@@ -140,17 +141,29 @@ export default {
 
 
       },
+
+      //Game画面への遷移
       TransitionToGame:function()
       {
         clearInterval(this.timer);
+        if (this.$store.getters["question/getQCount"] == 0)
+        {
+          this.LoadDummyQuestion();
+        }
         this.$router.push("/ready");
 
       }
 
     },
+
+    //home画面を表示時に
+    //クイズデータをVuexStoreにロードする
+    //ポーリングを開始する
     mounted:function()
     {
       const self = this;
+
+      self.$store.commit('question/clearData');
       self.LoadQuizData();
       self.timer =setInterval(()=>self.polling(),500);
     },

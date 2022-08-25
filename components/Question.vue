@@ -1,18 +1,17 @@
 <template>
     <v-container justify="center" align-content="center">
         <v-row justify="space-between">
-        <v-col>
-            <v-row>
-                <p class="q_number">{{Get_Q_Num_Disp}}</p>
-            </v-row>
-            <v-row>
-                <p class="q_content">{{Q_Content}}</p>
-            </v-row>
-        </v-col>
-        <v-col cols="1" justify="center" align-content="center">
-            <CountDown :count=this.Q_CountDown />
-        </v-col>
-
+            <v-col>
+                <v-row>
+                    <p class="q_number">{{Get_Q_Num_Disp}}</p>
+                </v-row>
+                <v-row>
+                    <p class="q_content">{{ Q_Content }}</p>
+                </v-row>
+            </v-col>
+            <v-col cols="1" justify="center" align-content="center">
+                <CountDown :count=this.Q_CountDown />
+            </v-col>
         </v-row>
     </v-container>
 </template>
@@ -20,7 +19,7 @@
 <style>
 .q_number
 {
-    font-size: 20pt;
+    font-size: 23pt;
     font-weight: bold;
 }
 
@@ -28,7 +27,7 @@
 {
     font-size: 30pt;
     font-weight: bold;
-    margin-left: 30px;
+    margin-left: 20px;
 }
 .q_countdown
 {
