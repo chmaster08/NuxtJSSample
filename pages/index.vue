@@ -12,7 +12,13 @@
     <v-row justify="center" align-content="center">
       <PoseDisplayer :imgSrc="this.imgPath" />
     </v-row>
-    <v-row justify="center" align-content="center">
+    <v-row justify="center" align-content="center" v-if="!this.loaded">
+      <p>Loading....</p>
+    </v-row>
+    <v-row justify="center" align-content="center" v-if="this.loaded">
+      <p>Loading....Complete!!</p>
+    </v-row>
+    <v-row justify="center" align-content="center" v-if="this.loaded">
       <v-btn color="primary" @click="this.TransitionToGame">Start for Debug</v-btn>
     </v-row>
   </v-container>
@@ -29,15 +35,17 @@
 import KMLogo from "../components/KMLogo.vue";
 import PoseDisplayer from "../components/PoseDisplayer.vue";
 import { mapMutations } from 'vuex'
+import { async } from "q";
 export default {
     name: "IndexPage",
     components: { KMLogo, PoseDisplayer },
     data :()=>{
       return{
-        imgPath: "/yoga_pose_default.png",
+        imgPath: require("@/assets/yoga_pose_default.png"),
         error_message: "",
         recognition: "skeleton",
         before_recognition: "skeleton",
+        loaded :false,
         timer:undefined,
       }
 
@@ -45,9 +53,14 @@ export default {
     },
     methods:{
 
+      LoadQuizData :async function()
+      {
+        await this.GetQuizData();
+        this.loaded = true;
+      },
       //Quizを取得する
-      LoadQuizData: function () {
-        this.$axios.get(this.$config.questionURL, {
+      GetQuizData: async function () {
+        await this.$axios.get(this.$config.questionURL, {
           headers: {
             "content-type": "application/x-www-form-urlencoded",
           },
@@ -101,7 +114,7 @@ export default {
             if (error.response.data.body.imagedate) {
               this.imgPath = `data:image/jpeg;base64,${error.response.data.body.imagedate}`;
             } else {
-              this.imgPath = "yoga_pose_default.png";
+              this.imgPath = require("@/assets/yoga_pose_default.png");
             }
             this.error_message =
               error.response.data.body.error_type +
@@ -112,11 +125,11 @@ export default {
             console.log(error.response.statusText);
             console.log(error.response.headers);
           } else if (error.request) {
-            this.imgPath = "yoga_pose_default.png";
+            this.imgPath = require("@/assets/yoga_pose_default.png");
             this.error_message = "Error: no response from server";
             console.log(error.request);
           } else {
-            this.imgPath = "yoga_pose_default.png";
+            this.imgPath = require("@/assets/yoga_pose_default.png");
             this.error_message = "Error: something went wrong";
             console.log("Error", error.message);
           }
@@ -146,10 +159,6 @@ export default {
       TransitionToGame:function()
       {
         clearInterval(this.timer);
-        if (this.$store.getters["question/getQCount"] == 0)
-        {
-          this.LoadDummyQuestion();
-        }
         this.$router.push("/ready");
 
       }
@@ -163,11 +172,11 @@ export default {
     {
       const self = this;
 
+      self.loaded = false;
       self.$store.commit('question/clearData');
       self.LoadQuizData();
       self.timer =setInterval(()=>self.polling(),500);
     },
-
 
 }
 </script>

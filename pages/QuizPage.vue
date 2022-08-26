@@ -51,7 +51,7 @@
                 <v-btn color="warning" @click="onDetectRightPose">
                     second pose detect for debug
                 </v-btn>
-                <v-btn color="success" nuxt to="/">
+                <v-btn color="success" @click="this.BackToIndex">
                     Back to Top For Debug
                 </v-btn>
         </v-row>
@@ -132,8 +132,11 @@ export default{
             if (this.currentQNum == this.totalQCount)
             {
                 clearInterval(this.timer);
-                let passNumer = this.q_state.filter(value => value == "OK").length;
-                this.$router.push({name:"Result",params:{pass:passNumer,path:this.successImage}});
+                clearInterval(this.counterID);
+                let sucscore = this.q_state.filter(value => value == "OK").length*10;
+                this.$store.commit('question/setScore', sucscore);
+                this.$store.commit('question/setImgName', this.successImage);
+                this.$router.push({name:"Result",params:{score:sucscore,imgName:this.successImage}});                
                 return;
             }
 
@@ -244,43 +247,6 @@ export default{
                 });
         },
 
-        getStreaming :function()
-        {
-            this.$axios.get(this.$config.streamURL, {
-                headers: {
-                    "content-type": "application/x-www-form-urlencoded",
-                },
-            })
-                .then((response) => {
-                    this.streamURL = `${response.data.body}`;
-                })
-                .catch((error) => {
-                    if (error.response) {
-                        if (error.response.data.body) {
-                            this.imgPath = `data:image/jpeg;base64,${error.response.data.body}`;
-                        } else {
-                            this.imgPath = "yoga_pose_default.png";
-                        }
-                        this.error_message =
-                            error.response.data.body.error_type +
-                            ": " +
-                            error.response.data.body.error_message;
-                        console.log(error.response.data);
-                        console.log(error.response.status);
-                        console.log(error.response.statusText);
-                        console.log(error.response.headers);
-                    } else if (error.request) {
-                        this.imgPath = "yoga_pose_default.png";
-                        this.error_message = "Error: no response from server";
-                        console.log(error.request);
-                    } else {
-                        this.imgPath = "yoga_pose_default.png";
-                        this.error_message = "Error: something went wrong";
-                        console.log("Error", error.message);
-                    }
-                });
-
-        },
 
         onDetectPose0 : function()
         {
@@ -305,15 +271,19 @@ export default{
 
         },
 
+        BackToIndex : function(){
+            
+            clearInterval(this.timer);
+            this.$store.commit('question/clearData');
+            this.$router.push("/");
+        }
+
     },
     components : { Question, PoseDisplayer, Selection, StateViewer },
 
     mounted:function()
     {
-      const self = this;
-      self.currentQuiz = this.$store.getters['question/getQ_data'](0);
-      self.timer =setInterval(()=>self.pooling(),500);
-        self.counterID = setInterval(() => self.CountDown(), 1000);
+        const self = this;
     },
 
     created() {
@@ -325,6 +295,9 @@ export default{
       }
       console.log(self.q_state);
       self.q_state.splice();
+        self.currentQuiz = this.$store.getters['question/getQ_data'](0);
+        self.timer =setInterval(()=>self.pooling(),500);
+        self.counterID = setInterval(() => self.CountDown(), 1000);
         
     },
 
@@ -341,8 +314,8 @@ export default{
         },
         getPoseNameLeft()
         {
-            console.log("leftName"+this.PoseNameList[this.leftPoseNum]);
-            console.log("leftNum"+this.leftPoseNum);
+            //console.log("leftName"+this.PoseNameList[this.leftPoseNum]);
+            //console.log("leftNum"+this.leftPoseNum);
             return this.PoseNameList[this.leftPoseNum];
         },
         getPoseNameRight()
@@ -354,7 +327,6 @@ export default{
     watch:{
         detectedPose : function(oldv,newv)
         {
-            console.log("newValue:"+newv);
             if (newv == -1)
             {
                 return;

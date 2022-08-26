@@ -4,10 +4,10 @@
         <h1>Result</h1>
     </v-row>
     <v-row justify="center">
-        <p class="content">{{this.getResultText}}</p>
+        <p class="content">{{this.resulttext}}</p>
     </v-row>
     <v-row justify="center">
-        <p class="point">{{this.getScore}} points !!</p>
+        <p class="point">{{$route.params.score}} points !!</p>
     </v-row>
     <v-row justify="center" v-if="this.uploaded">
         <p class="content">Image has been uploaded successfully</p>
@@ -16,7 +16,10 @@
         <p class="content">Thank you for playing.</p>
     </v-row>
     <v-row justify="center">
-        <v-btn color="primary" nuxt to="/" class="btn">Retry</v-btn>
+        <v-btn color="success" @click="this.UploadImageClick" class="btn">Upload Result Data</v-btn>
+    </v-row>
+    <v-row justify="center">
+        <v-btn color="primary" @click="this.BacktoIndex" class="btn">Retry</v-btn>
     </v-row>
 </v-container>
 </template>
@@ -49,6 +52,9 @@ export default({
 
         return{
             uploaded : false,
+            score:0,
+            imgURL:"",
+            resulttext:"Well Done",
         };
     },
     methods :{
@@ -59,15 +65,16 @@ export default({
         {
             this.$confetti.stop();
         },
-        UploadImage: function () {
-            var extendtext = $route.params.path+"_"+this.getScore();
-            this.$axios.get(this.$config.uploadImageURL+extendtext, {
+        UploadImage:async function () {
+            var extendtext = this.$store.getters['question/getImgName']+ "_" + this.$store.getters['question/getScore'];
+            var url = this.$config.uploadImageURL + extendtext;
+            console.log(url);
+            await this.$axios.get(url, {
                 headers: {
                     "content-type": "application/x-www-form-urlencoded",
                 },
             })
                 .then((response) => {
-                    this.uploaded = true;
                 })
                 .catch((error) => {
                     if (error.response) {
@@ -88,25 +95,41 @@ export default({
                     }
                 });
         },
+
+        BacktoIndex :function()
+        {
+            this.$store.commit('question/clearData');
+            this.$router.push("/");
+        },
+
+        UploadImageClick :async function()
+        {
+            await this.UploadImage();
+            this.uploaded =true;
+        }
+
+
     },
 
     computed :{
         getScore()
         {
-            return this.$route.params.pass * 10;
+            this.score = this.$route.params.body.score;
+            this.imgURL = this.$route.params.body.imgName;
+            return this.$route.params.body.score;
         },
 
-        getResultText()
+        getResultText: function()
         {
-            if (this.$route.params.pass == 0)
+            if (this.$route.body.score == 0)
             {
                 return "Work hard!!";
             }
-            else if (this.$route.params.pass < 5)
+            else if (this.$route.body.score < 50)
             {
                 return "Nice try!!";
             }
-            else if (this.$route.params.pass == 10)
+            else if (this.$route.body.score == 100)
             {
                 return "Perfect!!";
             }
@@ -115,6 +138,7 @@ export default({
                 return "Well done!!";
             }
         }
+
     }
 })
 </script>

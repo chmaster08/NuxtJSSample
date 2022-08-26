@@ -1,5 +1,5 @@
 <template>
-    <img src="/kmlogo.png" class="km-logo"/>
+    <img src="~/assets/kmlogo.png" class="km-logo"/>
 </template>
 
 <style>
