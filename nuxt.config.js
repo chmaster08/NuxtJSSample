@@ -24,6 +24,7 @@ export default {
     apiURL : process.env.API_URL,
     streamURL : process.env.STREAM_URL,
     questionURL : process.env.QUESTION_URL,
+    uploadImageURL : process.env.UPLOAD_IMAGE_URL,
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
@@ -37,6 +38,7 @@ export default {
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
+  target:'static',
 
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [
@@ -70,5 +72,5 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
-  }
+  },
 }

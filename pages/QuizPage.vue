@@ -12,6 +12,7 @@
             <v-col>
                 <v-card class="selection-tile" :color="this.leftColorState">
                     <Selection v-bind:answer="this.leftAns" :PoseNum="this.getPoseNumforLeft" 
+                    :PoseName="this.getPoseNameLeft"
                     />
                 </v-card>
             </v-col>
@@ -23,6 +24,7 @@
             <v-col>
                 <v-card class="selection-tile" :color="this.rightColorState">
                     <Selection v-bind:answer="this.rightAns" v-bind:PoseNum="this.getPoseNumforRight"
+                     :PoseName="this.getPoseNameRight"
                      />
                 </v-card>
             </v-col>
@@ -116,6 +118,8 @@ export default{
             recognition: "skeleton",
             timer: undefined,
             PoseNameList :["戦士のポーズⅡ","ダウンドッグ","三日月のポーズ","戦士のポーズⅢ"],
+            imageURL:"",
+            successImage:"",
         };
 
     },
@@ -129,7 +133,7 @@ export default{
             {
                 clearInterval(this.timer);
                 let passNumer = this.q_state.filter(value => value == "OK").length;
-                this.$router.push({name:"Result",params:{pass:passNumer}});
+                this.$router.push({name:"Result",params:{pass:passNumer,path:this.successImage}});
                 return;
             }
 
@@ -145,6 +149,7 @@ export default{
                 this.q_state[this.currentQNum-1] = "OK";
                 this.q_state.splice();
                 this.leftColorState = "green lighten-2";
+                this.successImage = this.imageURL;
             }
             else
             {
@@ -164,6 +169,7 @@ export default{
                 this.q_state[this.currentQNum-1] = "OK";
                 this.q_state.splice();
                 this.rightColorState = "green lighten-2";
+                this.successImage = this.imageURL;
             }
             else
             {
@@ -204,6 +210,11 @@ export default{
             })
                 .then((response) => {
                     this.imgPath = `data:image/jpeg;base64,${response.data.body.imagedata}`;
+                    this.imageURL = response.data.imagename;
+                    console.log("-----Image Name----- : " + this.imageURL);
+
+                    this.detectedPose = response.data.DETECTED_POSE;
+                    console.log("-----Detected Pose----- : " + this.detectedPose);
 
                 })
                 .catch((error) => {

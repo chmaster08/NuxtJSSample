@@ -9,6 +9,9 @@
     <v-row justify="center">
         <p class="point">{{this.getScore}} points !!</p>
     </v-row>
+    <v-row justify="center" v-if="this.uploaded">
+        <p class="content">Image has been uploaded successfully</p>
+    </v-row>
     <v-row justify="center">
         <p class="content">Thank you for playing.</p>
     </v-row>
@@ -42,6 +45,12 @@ h1{
 <script>
 
 export default({
+    data : ()=>{
+
+        return{
+            uploaded : false,
+        };
+    },
     methods :{
         startConfetti(){
             this.$confetti.start();
@@ -49,7 +58,36 @@ export default({
         stopConfetti()
         {
             this.$confetti.stop();
-        }
+        },
+        UploadImage: function () {
+            var extendtext = $route.params.path+"_"+this.getScore();
+            this.$axios.get(this.$config.uploadImageURL+extendtext, {
+                headers: {
+                    "content-type": "application/x-www-form-urlencoded",
+                },
+            })
+                .then((response) => {
+                    this.uploaded = true;
+                })
+                .catch((error) => {
+                    if (error.response) {
+                        this.error_message =
+                            error.response.data.body.error_type +
+                            ": " +
+                            error.response.data.body.error_message;
+                        console.log(error.response.data);
+                        console.log(error.response.status);
+                        console.log(error.response.statusText);
+                        console.log(error.response.headers);
+                    } else if (error.request) {
+                        this.error_message = "Error: no response from server";
+                        console.log(error.request);
+                    } else {
+                        this.error_message = "Error: something went wrong";
+                        console.log("Error", error.message);
+                    }
+                });
+        },
     },
 
     computed :{
