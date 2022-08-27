@@ -9,7 +9,7 @@
                     <p class="q_content">{{ Q_Content }}</p>
                 </v-row>
             </v-col>
-            <v-col cols="1" justify="center" align-content="center">
+            <v-col cols="1" justify="center" align-content="center" class="q_countdown">
                 <CountDown :count=this.Q_CountDown />
             </v-col>
         </v-row>
@@ -31,8 +31,7 @@
 }
 .q_countdown
 {
-    font-size:  40pt;
-    font-weight: bold;
+    min-width: 180px;
 }
 </style>
 

@@ -7,18 +7,15 @@
       <h1 class="game-title">Quiz Yogionea</h1>
     </v-row>
     <v-row justify="center" align-content="center">
-      <p>プレイヤーが中心に移るようにカメラ位置を調整してください</p>
+      <p class="guidanceText">プレイヤーが中心に映るようにカメラ位置を調整してください</p>
     </v-row>
     <v-row justify="center" align-content="center">
       <PoseDisplayer :imgSrc="this.imgPath" />
     </v-row>
-    <v-row justify="center" align-content="center" v-if="!this.loaded">
-      <p>Loading....</p>
+    <v-row justify="center" align-content="center">
+      <p class="loadingText">{{this.loadingText}}</p>
     </v-row>
-    <v-row justify="center" align-content="center" v-if="this.loaded">
-      <p>Loading....Complete!!</p>
-    </v-row>
-    <v-row justify="center" align-content="center" v-if="this.loaded">
+    <v-row justify="center" align-content="center" v-if="this.canStart">
       <v-btn color="primary" @click="this.TransitionToGame">Start for Debug</v-btn>
     </v-row>
   </v-container>
@@ -27,7 +24,16 @@
 <style>
 .game-title{
   font-size: 40pt;
-  margin: 30px;
+  margin: 20px;
+}
+
+.loadingText{
+  font-size:  30pt;
+}
+
+.guidanceText
+{
+  font-size:  30pt;
 }
 </style>
 
@@ -45,7 +51,10 @@ export default {
         error_message: "",
         recognition: "skeleton",
         before_recognition: "skeleton",
+        loadingText : "Loading Quiz Data...",
         loaded :false,
+        canStart:false,
+        loadingtimer : undefined,
         timer:undefined,
       }
 
@@ -55,8 +64,22 @@ export default {
 
       LoadQuizData :async function()
       {
+        this.loadingtimer = setInterval(()=>this.UpdateLoadingText(),500);
         await this.GetQuizData();
-        this.loaded = true;
+        clearInterval(this.loadingtimer);
+        if (this.loaded)
+        {
+          this.loadingText += "Complete!";
+        }
+        else
+        {
+          this.loadingText = "Failed to load Quiz Data. Dummy Data has been loaded."
+        }
+      },
+
+      UpdateLoadingText()
+      {
+        this.loadingText += ".";
       },
       //Quizを取得する
       GetQuizData: async function () {
@@ -64,6 +87,7 @@ export default {
           headers: {
             "content-type": "application/x-www-form-urlencoded",
           },
+          timeout : 5000,
         })
         .then((response) => {
           response.data.forEach(el => {
@@ -71,6 +95,7 @@ export default {
             this.$store.commit('question/addAns', el["ans"]);
           });
           console.log("Get QuizData Successfully");
+          this.loaded = true;
         })
         .catch((error) => {
           console.log(error);
@@ -91,6 +116,7 @@ export default {
             console.log("Error", error.message);
           }
           this.LoadDummyQuestion();
+          this.loaded = false;
         });
 
       },
@@ -101,12 +127,13 @@ export default {
           headers: {
             "content-type": "application/x-www-form-urlencoded",
           },
+          timeout : 1000,
         })
         .then((response) => {
-          //if (response.data.body.button_status == 1)
-          //{
-          //  this.Transit();
-          //}
+          if (response.data.button_status == 1)
+          {
+            this.Transit();
+          }
           this.imgPath = `data:image/jpeg;base64,${response.data.body.imagedata}`;
         })
         .catch((error) => {
@@ -176,6 +203,7 @@ export default {
       self.$store.commit('question/clearData');
       self.LoadQuizData();
       self.timer =setInterval(()=>self.polling(),500);
+      self.canStart = true;
     },
 
 }

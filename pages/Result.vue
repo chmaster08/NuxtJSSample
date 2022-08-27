@@ -9,14 +9,11 @@
     <v-row justify="center">
         <p class="point">{{$route.params.score}} points !!</p>
     </v-row>
-    <v-row justify="center" v-if="this.uploaded">
-        <p class="content">Image has been uploaded successfully</p>
+    <v-row justify="center" v-if="this.startUpload">
+        <p class="uploadInfo">{{this.uploadInfo}}</p>
     </v-row>
     <v-row justify="center">
         <p class="content">Thank you for playing.</p>
-    </v-row>
-    <v-row justify="center">
-        <v-btn color="success" @click="this.UploadImageClick" class="btn">Upload Result Data</v-btn>
     </v-row>
     <v-row justify="center">
         <v-btn color="primary" @click="this.BacktoIndex" class="btn">Retry</v-btn>
@@ -25,6 +22,7 @@
 </template>
 
 <style>
+
 h1{
     font-size: 100pt;
     align-items: center;
@@ -38,10 +36,14 @@ h1{
     font-size: 60pt;
 }
 
+.uploadInfo{
+    font-size: 40pt;
+}
+
 .btn
 {
-    width: 1000px;
-    height:200px;
+    width: 500px;
+    height:500px;
 }
 </style>
 
@@ -51,10 +53,11 @@ export default({
     data : ()=>{
 
         return{
-            uploaded : false,
+            startUpload : false,
             score:0,
+            uploadInfo : "Uploading result data....",
             imgURL:"",
-            resulttext:"Well Done",
+            resulttext:"Nice Try!!",
         };
     },
     methods :{
@@ -73,8 +76,10 @@ export default({
                 headers: {
                     "content-type": "application/x-www-form-urlencoded",
                 },
+                timeout:4000,
             })
                 .then((response) => {
+                    this.uploadInfo = "Result data has been uploaded successfully."
                 })
                 .catch((error) => {
                     if (error.response) {
@@ -92,7 +97,8 @@ export default({
                     } else {
                         this.error_message = "Error: something went wrong";
                         console.log("Error", error.message);
-                    }
+                    };
+                    this.uploadInfo = "Failed to upload result data."
                 });
         },
 
@@ -104,10 +110,20 @@ export default({
 
         UploadImageClick :async function()
         {
-            await this.UploadImage();
-            this.uploaded =true;
+            var image = this.$store.getters['question/getScore'];
+            if (image.length > 0)
+            {
+                this.startUpload = true;
+                await this.UploadImage();
+            }
         }
 
+
+    },
+
+    created(){
+
+        this.UploadImageClick();
 
     },
 

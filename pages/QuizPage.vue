@@ -1,6 +1,6 @@
 <template>
     <v-container>
-        <v-row justify="space-between" align-content="center" class="mb-5">
+        <v-row justify="space-between" align-content="center" >
             <StateViewer :Q_State="this.q_state"/>
         </v-row>
         <v-row justify="center" align-content="center">
@@ -29,7 +29,7 @@
                 </v-card>
             </v-col>
         </v-row>
-        <v-row>
+        <v-row v-if="false">
                 <v-btn color="secondary" v-on:click="UpdateQuiz">
                     Next for Debug(Not Selected)
                 </v-btn>
@@ -71,7 +71,7 @@
 
 .pose-disp-tile
 {
-    width: 400px;
+    width: 420px;
     height: 500px;
     margin-left: 50px;
 
@@ -80,12 +80,12 @@
 {
     min-width:600px;
     width: 100%;
-    min-height: 500px;
-    padding-top:  50px;
+    min-height: 550px;
+    padding-top:  10px;
 }
 .selection-row
 {
-    padding-top: 20px;
+    padding-top: 10px;
 }
 </style>
 <script>
@@ -108,7 +108,8 @@ export default{
             totalQCount : 10,
             currentQuiz : "Nodata",
             counterID : undefined,
-            counter : 10,
+            counter : 20,
+            answerTime : 20,
             detectedPose : -1,
             reload : true,
             q_state : [],
@@ -200,7 +201,7 @@ export default{
         {
             clearInterval(this.counterID);
             await this.sleepByPromise(2);
-            this.counter = 10;
+            this.counter = this.answerTime;
             this.leftColorState = "blue-grey lighten-4";
             this.rightColorState = "blue-grey lighten-4";
             this.UpdateQuiz();
@@ -210,6 +211,7 @@ export default{
                 headers: {
                     "content-type": "application/x-www-form-urlencoded",
                 },
+                timeout: 1000,
             })
                 .then((response) => {
                     this.imgPath = `data:image/jpeg;base64,${response.data.body.imagedata}`;
@@ -225,7 +227,7 @@ export default{
                         if (error.response.data.body.imagedate) {
                             this.imgPath = `data:image/jpeg;base64,${error.response.data.body.imagedate}`;
                         } else {
-                            this.imgPath = "yoga_pose_default.png";
+                            this.imgPath = require("@/assets/yoga_pose_default.png");
                         }
                         this.error_message =
                             error.response.data.body.error_type +
@@ -236,11 +238,11 @@ export default{
                         console.log(error.response.statusText);
                         console.log(error.response.headers);
                     } else if (error.request) {
-                        this.imgPath = "yoga_pose_default.png";
+                        this.imgPath = require("@/assets/yoga_pose_default.png");
                         this.error_message = "Error: no response from server";
                         console.log(error.request);
                     } else {
-                        this.imgPath = "yoga_pose_default.png";
+                        this.imgPath = require("@/assets/yoga_pose_default.png");
                         this.error_message = "Error: something went wrong";
                         console.log("Error", error.message);
                     }
@@ -289,6 +291,7 @@ export default{
     created() {
       const self = this;
       self.totalQCount = this.$store.getters["question/getQCount"];
+      self.counter = self.answerTime;
       for (var i = 0; i < self.totalQCount ; i++)
       {
         self.q_state.push("NONE");
@@ -296,7 +299,7 @@ export default{
       console.log(self.q_state);
       self.q_state.splice();
         self.currentQuiz = this.$store.getters['question/getQ_data'](0);
-        self.timer =setInterval(()=>self.pooling(),500);
+        this.timer = setInterval(() => this.pooling(), 500);
         self.counterID = setInterval(() => self.CountDown(), 1000);
         
     },
@@ -328,6 +331,10 @@ export default{
         detectedPose : function(oldv,newv)
         {
             if (newv == -1)
+            {
+                return;
+            }
+            if (oldv == newv)
             {
                 return;
             }

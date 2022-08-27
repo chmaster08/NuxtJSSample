@@ -1,25 +1,25 @@
 <template>
-    <v-container fill-height align-content="center">
+    <v-container align-content="center">
         <v-row align-content="center" justify="center" class="align-center">
-            <v-col class="ml-5 mr-15">
+            <v-col >
                 <v-row justify="center">
                     <p class="pose_name">{{PoseName}}</p>
                 </v-row>
-                <v-row>
+                <v-row justify="center">
                     <img :src="imgSrc" class="pose-img" />
                 </v-row>
             </v-col>
-            <v-col>
-                <p class="select-content">{{answer}}</p>
-            </v-col>
+        </v-row>
+        <v-row justify="center">
+            <p class="select-content">{{answer}}</p>
         </v-row>
     </v-container>
 </template>
 
 <style>
 .pose-img{
-    height: 350px;
-    max-width: 350px;
+    height: 450px;
+    max-width: 450px;
     align-items: center;
 }
 

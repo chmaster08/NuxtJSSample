@@ -7,24 +7,24 @@
 <style>
 .number_normal
 {
-    font-size: 50pt;
+    font-size: 70pt;
     font-weight: bold;
     color :black;
     text-shadow: 5px 10px 10px #808080;
 }
 .number_emergency
 {
-    font-size: 55pt;
+    font-size: 75pt;
     font-weight: bold;
     align-items: center;
     color:#E53935;
     text-shadow: 5px 10px 10px #808080;
-    animation: turn 1s ease-out 1s;
+    animation: turn .2s ease-out .2s;
 }
 
 @keyframes turn{
     100%{
-        transform:scale(1.2);
+        transform:scale(1.8);
     }
 
 }
