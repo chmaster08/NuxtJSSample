@@ -19,15 +19,15 @@
 <style>
 .q_number
 {
-    font-size: 23pt;
+    font-size: 25pt;
     font-weight: bold;
 }
 
 .q_content
 {
-    font-size: 30pt;
+    font-size: 32pt;
     font-weight: bold;
-    margin-left: 20px;
+    margin-left: 10px;
 }
 .q_countdown
 {

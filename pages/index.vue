@@ -75,6 +75,7 @@ export default {
         {
           this.loadingText = "Failed to load Quiz Data. Dummy Data has been loaded."
         }
+        this.canStart = true;
       },
 
       UpdateLoadingText()
@@ -203,7 +204,6 @@ export default {
       self.$store.commit('question/clearData');
       self.LoadQuizData();
       self.timer =setInterval(()=>self.polling(),500);
-      self.canStart = true;
     },
 
 }

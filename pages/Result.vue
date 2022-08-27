@@ -116,6 +116,10 @@ export default({
                 this.startUpload = true;
                 await this.UploadImage();
             }
+            else
+            {
+                console.log("upload is canceled because no image data");
+            }
         }
 
 

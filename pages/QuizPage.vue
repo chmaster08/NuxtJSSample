@@ -29,7 +29,7 @@
                 </v-card>
             </v-col>
         </v-row>
-        <v-row v-if="false">
+        <v-row>
                 <v-btn color="secondary" v-on:click="UpdateQuiz">
                     Next for Debug(Not Selected)
                 </v-btn>
