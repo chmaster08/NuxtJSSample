@@ -8,7 +8,7 @@
                 <Question :Q_Num="this.currentQNum" :Q_Content="this.currentQuiz" :Q_CountDown="this.counter"/>
             </v-card>
         </v-row>
-        <v-row justify="space-around" align-content="center" class="selection-row">
+        <v-row justify="space-between" align-content="center" class="selection-row">
             <v-col>
                 <v-card class="selection-tile" :color="this.leftColorState">
                     <Selection v-bind:answer="this.leftAns" :PoseNum="this.getPoseNumforLeft" 
@@ -71,14 +71,14 @@
 
 .pose-disp-tile
 {
-    width: 420px;
-    height: 500px;
-    margin-left: 50px;
+    max-width: 660;
+    max-height: 500;
+    margin-top: 50px;
 
 }
 .selection-tile
 {
-    min-width:600px;
+    min-width:500px;
     width: 100%;
     min-height: 550px;
     padding-top:  10px;

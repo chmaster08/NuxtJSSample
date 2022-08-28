@@ -1,12 +1,8 @@
 <template>
-    <img :src="this.imgSrc" class="pose_picture" />
+    <img :src="this.imgSrc"  />
 </template>
 
 <style>
-.pose_picture{
-    height: 500px;
-    max-width: 400px;
-}
 </style>
 
 <script>

@@ -42,6 +42,8 @@ import KMLogo from "../components/KMLogo.vue";
 import PoseDisplayer from "../components/PoseDisplayer.vue";
 import { mapMutations } from 'vuex'
 import { async } from "q";
+import {w3cwebsocket} from 'websocket';
+const W3CWebSocket = w3cwebsocket;
 export default {
     name: "IndexPage",
     components: { KMLogo, PoseDisplayer },
@@ -205,6 +207,7 @@ export default {
       self.LoadQuizData();
       self.timer =setInterval(()=>self.polling(),500);
     },
+
 
 }
 </script>
