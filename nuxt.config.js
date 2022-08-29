@@ -22,7 +22,6 @@ export default {
 
   publicRuntimeConfig:{
     apiURL : process.env.API_URL,
-    streamURL : process.env.STREAM_URL,
     questionURL : process.env.QUESTION_URL,
     uploadImageURL : process.env.UPLOAD_IMAGE_URL,
   },
