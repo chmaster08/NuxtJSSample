@@ -19,13 +19,13 @@
 <style>
 .q_number
 {
-    font-size: 25pt;
+    font-size: 30pt;
     font-weight: bold;
 }
 
 .q_content
 {
-    font-size: 32pt;
+    font-size: 38pt;
     font-weight: bold;
     margin-left: 10px;
 }
@@ -45,7 +45,7 @@ export default{
         },
         Q_Content: {
             type: String,
-            default: "This is Question Display Component. Can you see me?"
+            default: "No Quiz Data"
         },
         Q_CountDown:{
             type : Number,
