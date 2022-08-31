@@ -12,10 +12,14 @@
     <v-row justify="center" align-content="center">
       <PoseDisplayer :imgSrc="this.imgPath" />
     </v-row>
-    <v-row justify="center" align-content="center">
+    <v-row justify="center" align-content="center" v-if="!this.canStart">
+      <v-progress-circular :size="50" color="blue" indeterminate>
+      </v-progress-circular>
+  </v-row>
+  <v-row justify="center">
       <p class="loadingText">{{this.loadingText}}</p>
-    </v-row>
-    <v-row justify="center" align-content="center" v-if="this.canStart">
+  </v-row>
+  <v-row justify="center" align-content="center" v-if="this.canStart">
       <v-btn color="primary" @click="this.TransitionToGame">Start for Debug</v-btn>
     </v-row>
   </v-container>
@@ -28,7 +32,7 @@
 }
 
 .loadingText{
-  font-size:  30pt;
+  font-size:  20pt;
 }
 
 .guidanceText
@@ -198,14 +202,13 @@ export default {
     //home画面を表示時に
     //クイズデータをVuexStoreにロードする
     //ポーリングを開始する
-    mounted:function()
+    created:function()
     {
-      const self = this;
 
-      self.loaded = false;
-      self.$store.commit('question/clearData');
-      self.LoadQuizData();
-      self.timer =setInterval(()=>self.polling(),500);
+      this.loaded = false;
+      this.$store.commit('question/clearData');
+      this.LoadQuizData();
+      this.timer =setInterval(()=>this.polling(),500);
     },
 
 

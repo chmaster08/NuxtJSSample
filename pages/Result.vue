@@ -7,7 +7,8 @@
         <p class="content">{{this.resulttext}}</p>
     </v-row>
     <v-row justify="center">
-        <p class="point">{{$route.params.score}} points !!</p>
+        <p class="point">{{$route.params.score}}</p>
+        <p class="point_latter">points!!</p>
     </v-row>
     <v-row justify="center" v-if="this.startUpload">
         <p class="uploadInfo">{{this.uploadInfo}}</p>
@@ -29,7 +30,14 @@ h1{
 }
 
 .point{
-    font-size: 80pt;
+    font-size: 90pt;
+    font-weight: bold;
+}
+.point_latter
+{
+    font-size: 70pt;
+    padding-left: 20px;
+    padding-top: 20px;
 }
 
 .content{
@@ -48,6 +56,10 @@ h1{
 </style>
 
 <script>
+import Vue from 'vue'
+import VueConfetti from 'vue-confetti'
+
+Vue.use(VueConfetti)
 
 export default({
     data : ()=>{
@@ -61,10 +73,11 @@ export default({
         };
     },
     methods :{
-        startConfetti(){
-            this.$confetti.start();
+        startConfetti:function(){
+            this.$confetti.start({particles:[{dropRate:5}]});
+            setTimeout(()=>this.stopConfetti(),3000);
         },
-        stopConfetti()
+        stopConfetti: function()
         {
             this.$confetti.stop();
         },
@@ -127,6 +140,7 @@ export default({
 
     created(){
 
+        this.startConfetti();
         this.UploadImageClick();
 
     },
