@@ -118,7 +118,7 @@ export default{
             error_message: "",
             recognition: "skeleton",
             timer: undefined,
-            PoseNameList :["戦士のポーズⅡ","ダウンドッグ","三日月のポーズ","戦士のポーズⅢ"],
+            PoseNameList :["戦士のポーズⅡ","木のポーズ","月のポーズ(右)","月のポーズ(左)"],
             imageURL:"",
             successImage:"",
         };

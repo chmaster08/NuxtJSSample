@@ -19,7 +19,7 @@
 <style>
 .pose-img{
     height: 450px;
-    max-width: 450px;
+    width: 450px;
     align-items: center;
 }
 
