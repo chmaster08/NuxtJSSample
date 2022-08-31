@@ -1,15 +1,20 @@
 <template>
-    <v-container justify="center" fill-height align-content="center">
-        <transition>
+    <v-container justify="center" >
+        <v-row>
             <p class="ready ml-auto mr-auto">{{count}}</p>
-        </transition>
+        </v-row>
+        <v-row justify="center">
+            <img src="@/assets/guide.png" class="guide"/>
+        </v-row>
     </v-container>
 </template>
 
 <style>
 .ready{
     font-size: 100pt;
-    padding-top: 120px;
+}
+.guide{
+    margin-top: -50px;
 }
 
 </style>
