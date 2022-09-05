@@ -150,6 +150,7 @@ export default{
             var ans = this.$store.getters['question/getAns_data'](this.currentQNum-1);
             if (ans == "1")
             {
+                this.CallCorrectSound();
                 this.q_state[this.currentQNum-1] = "OK";
                 this.q_state.splice();
                 this.leftColorState = "green lighten-2";
@@ -157,6 +158,7 @@ export default{
             }
             else
             {
+                this.CallWrongSound();
                 this.q_state[this.currentQNum - 1] = "NG";
                 this.q_state.splice();
                 this.leftColorState = "red lighten-2";
@@ -170,6 +172,7 @@ export default{
             var ans = this.$store.getters['question/getAns_data'](this.currentQNum-1);
             if (ans == "2")
             {
+                this.CallCorrectSound();
                 this.q_state[this.currentQNum-1] = "OK";
                 this.q_state.splice();
                 this.rightColorState = "green lighten-2";
@@ -177,6 +180,7 @@ export default{
             }
             else
             {
+                this.CallWrongSound();
                 this.q_state[this.currentQNum - 1] = "NG";
                 this.q_state.splice();
                 this.rightColorState = "red lighten-2";
@@ -190,6 +194,7 @@ export default{
             this.counter = this.counter - 1;
             if (this.counter == 0)
             {
+                this.CallWrongSound();
                 this.leftColorState = "red lighten-2";
                 this.rightColorState = "red lighten-2";
                 this.q_state[this.currentQNum - 1] = "NG";
@@ -247,6 +252,50 @@ export default{
                         console.log("Error", error.message);
                     }
                 });
+        },
+
+        CallCorrectSound : function()
+        {
+            this.CallSoundAPI("CORRECT");
+
+        },
+
+        CallWrongSound : function()
+        {
+            this.CallSoundAPI("WRONG");
+        },
+
+        CallSoundAPI : function(flag)
+        {
+
+            this.$axios.get(this.$config.buzzerURL+flag, {
+                headers: {
+                    "content-type": "application/x-www-form-urlencoded",
+                },
+                timeout: 500,
+            })
+                .then((response) => {
+                    console.log(response);
+                })
+                .catch((error) => {
+                    if (error.response) {
+                        this.error_message =
+                            error.response.data.body.error_type +
+                            ": " +
+                            error.response.data.body.error_message;
+                        console.log(error.response.data);
+                        console.log(error.response.status);
+                        console.log(error.response.statusText);
+                        console.log(error.response.headers);
+                    } else if (error.request) {
+                        this.error_message = "Error: no response from server";
+                        console.log(error.request);
+                    } else {
+                        this.error_message = "Error: something went wrong";
+                        console.log("Error", error.message);
+                    }
+                });
+
         },
 
 

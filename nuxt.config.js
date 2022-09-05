@@ -24,6 +24,7 @@ export default {
     apiURL : process.env.API_URL,
     questionURL : process.env.QUESTION_URL,
     uploadImageURL : process.env.UPLOAD_IMAGE_URL,
+    buzzerURL : process.env.BUZZER_URL,
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
