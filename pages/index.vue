@@ -137,7 +137,7 @@ export default {
           timeout : 1000,
         })
         .then((response) => {
-          if (response.data.button_status == 1)
+          if (response.data.button_status == "1")
           {
             this.Transit();
           }
