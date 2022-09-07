@@ -216,10 +216,10 @@ export default{
                 headers: {
                     "content-type": "application/x-www-form-urlencoded",
                 },
-                timeout: 1000,
             })
                 .then((response) => {
                     this.imgPath = `data:image/jpeg;base64,${response.data.body.imagedata}`;
+                    console.log("Pose Detection : : " + response.data.DETECTED_POSE);
                     this.imageURL = response.data.imagename;
                     console.log("-----Image Name----- : " + this.imageURL);
 

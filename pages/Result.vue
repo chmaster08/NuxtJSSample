@@ -89,7 +89,7 @@ export default({
                 headers: {
                     "content-type": "application/x-www-form-urlencoded",
                 },
-                timeout:4000,
+                timeout:5000,
             })
                 .then((response) => {
                     this.uploadInfo = "Result data has been uploaded successfully."
