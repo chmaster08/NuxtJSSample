@@ -137,6 +137,7 @@ export default {
           timeout : 1000,
         })
         .then((response) => {
+          console.log("Button_Status : "+response.data.button_status);
           if (response.data.button_status == "1")
           {
             this.Transit();
