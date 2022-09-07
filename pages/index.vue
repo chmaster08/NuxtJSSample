@@ -62,6 +62,7 @@ export default {
         canStart:false,
         loadingtimer : undefined,
         timer:undefined,
+        acceptTransition : false,
       }
 
 
@@ -136,9 +137,10 @@ export default {
           },
         })
         .then((response) => {
-          if (response.data["button_status:"]== "1")
+          if (response.data["button_status:"]== "1" && !this.acceptTransition)
           {
-            this.Transit();
+            this.acceptTransition = true;
+            this.TransitionToGame();
           }
           this.imgPath = `data:image/jpeg;base64,${response.data.body.imagedata}`;
         })
@@ -205,6 +207,7 @@ export default {
     {
 
       this.loaded = false;
+      this.acceptTransition = false;
       this.$store.commit('question/clearData');
       this.LoadQuizData();
       this.timer =setInterval(()=>this.polling(),500);

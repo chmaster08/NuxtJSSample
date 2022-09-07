@@ -113,7 +113,7 @@ export default{
             detectedPose : -1,
             reload : true,
             q_state : [],
-            imgPath: "/yoga_pose_default.png",
+            imgPath: "@/assets/yoga_pose_default.png",
             streamURL:"",
             error_message: "",
             recognition: "skeleton",
@@ -121,6 +121,7 @@ export default{
             PoseNameList :["戦士のポーズⅡ","木のポーズ","月のポーズ(右)","月のポーズ(左)"],
             imageURL:"",
             successImage:"",
+            acceptTransition : false,
         };
 
     },
@@ -225,6 +226,11 @@ export default{
 
                     this.detectedPose = response.data.DETECTED_POSE;
                     console.log("-----Detected Pose----- : " + this.detectedPose);
+                    if (response.data["button_status:"] == "5" && !this.acceptTransition)
+                    {
+                        this.acceptTransition = true;
+                        this.BackToIndex();
+                    }
 
                 })
                 .catch((error) => {
@@ -348,6 +354,7 @@ export default{
       console.log(self.q_state);
       self.q_state.splice();
         self.currentQuiz = this.$store.getters['question/getQ_data'](0);
+        this.acceptTransition = false;
         this.timer = setInterval(() => this.pooling(), 500);
         self.counterID = setInterval(() => self.CountDown(), 1000);
         
