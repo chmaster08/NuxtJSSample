@@ -123,7 +123,7 @@ export default({
 
         UploadImageClick :async function()
         {
-            var image = this.$store.getters['question/getScore'];
+            var image = this.$store.getters['question/getImgName'];
             if (image.length > 0)
             {
                 this.startUpload = true;
