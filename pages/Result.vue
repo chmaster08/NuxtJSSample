@@ -123,6 +123,7 @@ export default({
         UploadImageClick :async function()
         {
             var image = this.$store.getters['question/getImgName'];
+            console.log("Image Name from UploadImageClick : "+ image);
             if (image.length > 0)
             {
                 this.startUpload = true;
