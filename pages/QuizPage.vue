@@ -226,7 +226,7 @@ export default{
 
                     this.detectedPose = response.data.DETECTED_POSE;
                     console.log("-----Detected Pose----- : " + this.detectedPose);
-                    if (response.data["button_status:"] == "5" && !this.acceptTransition)
+                    if (response.data["button_status"] == "5" && !this.acceptTransition)
                     {
                         this.acceptTransition = true;
                         this.BackToIndex();

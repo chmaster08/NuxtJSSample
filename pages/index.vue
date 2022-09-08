@@ -137,7 +137,7 @@ export default {
           },
         })
         .then((response) => {
-          if (response.data["button_status:"]== "1" && !this.acceptTransition)
+          if (response.data["button_status"]== "1" && !this.acceptTransition)
           {
             this.acceptTransition = true;
             this.TransitionToGame();
