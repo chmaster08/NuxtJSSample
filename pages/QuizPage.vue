@@ -110,6 +110,7 @@ export default{
             counterID : undefined,
             counter : 20,
             answerTime : 20,
+            intervalTime : 2,
             detectedPose : -1,
             reload : true,
             q_state : [],
@@ -211,7 +212,7 @@ export default{
             {
                 clearInterval(this.counterID);
                 this.counterID = undefined;
-                await this.sleepByPromise(2);
+                await this.sleepByPromise(this.intervalTime);
                 this.counter = this.answerTime;
                 this.leftColorState = "blue-grey lighten-4";
                 this.rightColorState = "blue-grey lighten-4";
@@ -353,6 +354,9 @@ export default{
       this.totalQCount = this.$store.getters["question/getQCount"];
       this.counter = this.answerTime;
       this.debug = this.$store.getters["question/getDebug"];
+      this.intervalTime = this.$store.getters["question/getInterval"];
+      this.answerTime = this.$store.getters["question/getAnswerTime"];
+      this.counter = this.answerTime;
       for (var i = 0; i < this.totalQCount ; i++)
       {
         this.q_state.push("NONE");

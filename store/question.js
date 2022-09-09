@@ -5,6 +5,8 @@ export const state = () =>({
     successUrl:"",
     totalQNum : 10,
     debug:true,
+    interval:2,
+    answerTime:20,
 });
 
 export const mutations = {
@@ -38,6 +40,14 @@ export const mutations = {
     setDebug(state, flag)
     {
         state.debug = flag;
+    },
+    setInterval(state,time)
+    {
+        state.interval = time;
+    },
+    setAnswerTime(state, time)
+    {
+        state.answerTime = time;
     }
 
 
@@ -71,5 +81,13 @@ export const getters={
     getDebug : state =>
     {
         return state.debug;
+    },
+    getInterval : state =>
+    {
+        return state.interval;
+    },
+    getAnswerTime : state =>
+    {
+        return state.answerTime;
     }
 }

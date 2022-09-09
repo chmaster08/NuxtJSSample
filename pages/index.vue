@@ -22,6 +22,9 @@
   <v-row justify="center" align-content="center" v-if="this.canStart && this.debug">
       <v-btn color="primary" @click="this.TransitionToGame">Start</v-btn>
     </v-row>
+  <v-row justify="center" align-content="center" v-if="this.canStart && this.debug">
+      <v-btn color="secondary" nuxt to="config">Settings</v-btn>
+    </v-row>
   </v-container>
 </template>
 
