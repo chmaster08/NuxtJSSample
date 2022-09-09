@@ -29,7 +29,7 @@
                 </v-card>
             </v-col>
         </v-row>
-        <v-row>
+        <v-row v-if="this.debug">
                 <v-btn color="secondary" v-on:click="UpdateQuiz">
                     Next for Debug(Not Selected)
                 </v-btn>
@@ -122,6 +122,7 @@ export default{
             imageURL:"",
             successImage:"",
             acceptTransition : false,
+            debug:true,
         };
 
     },
@@ -205,12 +206,17 @@ export default{
         },
         reset : async function()
         {
-            clearInterval(this.counterID);
-            await this.sleepByPromise(2);
-            this.counter = this.answerTime;
-            this.leftColorState = "blue-grey lighten-4";
-            this.rightColorState = "blue-grey lighten-4";
-            this.UpdateQuiz();
+            console.log("Counter ID when reset : "+this.counterID);
+            if (this.counterID)
+            {
+                clearInterval(this.counterID);
+                this.counterID = undefined;
+                await this.sleepByPromise(2);
+                this.counter = this.answerTime;
+                this.leftColorState = "blue-grey lighten-4";
+                this.rightColorState = "blue-grey lighten-4";
+                this.UpdateQuiz();
+            }
         },
         pooling: function () {
             this.$axios.get(this.$config.apiURL, {
@@ -344,19 +350,18 @@ export default{
     },
 
     created() {
-      const self = this;
-      self.totalQCount = this.$store.getters["question/getQCount"];
-      self.counter = self.answerTime;
-      for (var i = 0; i < self.totalQCount ; i++)
+      this.totalQCount = this.$store.getters["question/getQCount"];
+      this.counter = this.answerTime;
+      this.debug = this.$store.getters["question/getDebug"];
+      for (var i = 0; i < this.totalQCount ; i++)
       {
-        self.q_state.push("NONE");
+        this.q_state.push("NONE");
       }
-      console.log(self.q_state);
-      self.q_state.splice();
-        self.currentQuiz = this.$store.getters['question/getQ_data'](0);
+      this.q_state.splice();
+        this.currentQuiz = this.$store.getters['question/getQ_data'](0);
         this.acceptTransition = false;
         this.timer = setInterval(() => this.pooling(), 500);
-        self.counterID = setInterval(() => self.CountDown(), 1000);
+        this.counterID = setInterval(() => this.CountDown(), 1000);
         
     },
 

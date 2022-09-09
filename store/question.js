@@ -2,7 +2,9 @@ export const state = () =>({
     q_data:[],
     ans_data:[],
     score :0,
-    successUrl:""
+    successUrl:"",
+    totalQNum : 10,
+    debug:true,
 });
 
 export const mutations = {
@@ -28,6 +30,14 @@ export const mutations = {
     setImgName(state, imgName)
     {
         state.successUrl = imgName;
+    },
+    setTotalQuizNum(state, num)
+    {
+        state.totalQNum = num;
+    },
+    setDebug(state, flag)
+    {
+        state.debug = flag;
     }
 
 
@@ -48,7 +58,7 @@ export const getters={
     },
     getQCount :state =>
     {
-        return state.q_data.length; 
+        return state.totalQNum; 
     },
     getImgName : state =>
     {
@@ -57,5 +67,9 @@ export const getters={
     getScore : state =>
     {
         return state.score;
+    },
+    getDebug : state =>
+    {
+        return state.debug;
     }
 }

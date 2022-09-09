@@ -19,8 +19,8 @@
   <v-row justify="center">
       <p class="loadingText">{{this.loadingText}}</p>
   </v-row>
-  <v-row justify="center" align-content="center" v-if="this.canStart">
-      <v-btn color="primary" @click="this.TransitionToGame">Start for Debug</v-btn>
+  <v-row justify="center" align-content="center" v-if="this.canStart && this.debug">
+      <v-btn color="primary" @click="this.TransitionToGame">Start</v-btn>
     </v-row>
   </v-container>
 </template>
@@ -63,6 +63,7 @@ export default {
         loadingtimer : undefined,
         timer:undefined,
         acceptTransition : false,
+        debug:true,
       }
 
 
@@ -183,8 +184,6 @@ export default {
           var q_txt = leftNum + " + " + rightNum+" = "+ ansNum + " ? ";
           this.$store.commit('question/addQ',q_txt);
           this.$store.commit('question/addAns',ans);
-          console.log(this.$store.getters['question/getQ_data'](i));
-          console.log(this.$store.getters['question/getAns_data'](i));
         }
 
 
@@ -209,6 +208,7 @@ export default {
       this.loaded = false;
       this.acceptTransition = false;
       this.$store.commit('question/clearData');
+      this.debug = this.$store.getters["question/getDebug"];
       this.LoadQuizData();
       this.timer =setInterval(()=>this.polling(),500);
     },
