@@ -151,6 +151,7 @@ export default{
         onDetectLeftPose()
         {
             var ans = this.$store.getters['question/getAns_data'](this.currentQNum-1);
+            console.log("Correct Pose is : "+ ans);
             if (ans == "1")
             {
                 this.CallCorrectSound();
@@ -173,6 +174,7 @@ export default{
         onDetectRightPose()
         {
             var ans = this.$store.getters['question/getAns_data'](this.currentQNum-1);
+            console.log("Correct Pose is : "+ ans);
             if (ans == "2")
             {
                 this.CallCorrectSound();
@@ -229,10 +231,8 @@ export default{
                     this.imgPath = `data:image/jpeg;base64,${response.data.body.imagedata}`;
                     console.log("Pose Detection : : " + response.data.DETECTED_POSE);
                     this.imageURL = response.data.imagename;
-                    console.log("-----Image Name----- : " + this.imageURL);
 
                     this.detectedPose = response.data.DETECTED_POSE;
-                    console.log("-----Detected Pose----- : " + this.detectedPose);
                     if (response.data["button_status"] == "5" && !this.acceptTransition)
                     {
                         this.acceptTransition = true;
@@ -338,6 +338,7 @@ export default{
         BackToIndex : function(){
             
             clearInterval(this.timer);
+            clearInterval(this.counterID);
             this.$store.commit('question/clearData');
             this.$router.push("/");
         }
