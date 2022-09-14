@@ -23,7 +23,7 @@
       <v-btn color="primary" @click="this.TransitionToGame">Start</v-btn>
     </v-row>
   <v-row justify="center" align-content="center">
-      <v-btn color="secondary" nuxt to="config">Settings</v-btn>
+      <v-btn color="secondary" @click="this.gotoConfig">Settings</v-btn>
     </v-row>
   </v-container>
 </template>
@@ -197,6 +197,13 @@ export default {
       {
         clearInterval(this.timer);
         this.$router.push("/ready");
+
+      },
+
+      gotoConfig :function()
+      {
+        clearInterval(this.timer);
+        this.$router.push("/config");
 
       }
 
