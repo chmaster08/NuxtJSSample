@@ -54,7 +54,7 @@
             return{
 
                 q_numList: [5, 7, 10],
-                q_numSelect:10,
+                q_numSelect:5,
                 intervalList :[2,3,4,5],
                 interval:2,
                 answerList:[10,15,20,25,30],

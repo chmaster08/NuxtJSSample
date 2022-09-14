@@ -137,7 +137,7 @@ export default{
             {
                 clearInterval(this.timer);
                 clearInterval(this.counterID);
-                let sucscore = this.q_state.filter(value => value == "OK").length*10;
+                let sucscore = this.q_state.filter(value => value == "OK").length*20;
                 this.$store.commit('question/setScore', sucscore);
                 this.$store.commit('question/setImgName', this.successImage);
                 this.$router.push({name:"Result",params:{score:sucscore,imgName:this.successImage}});                

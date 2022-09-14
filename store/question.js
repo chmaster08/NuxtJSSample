@@ -3,7 +3,7 @@ export const state = () =>({
     ans_data:[],
     score :0,
     successUrl:"",
-    totalQNum : 10,
+    totalQNum : 5,
     debug:true,
     interval:2,
     answerTime:20,
